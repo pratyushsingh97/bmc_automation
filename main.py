@@ -85,12 +85,12 @@ def non_premium(fp):
             single_users = AccessGroup.create_access_groups(Person.person_list, "non premium") 
             if len(single_users): # now assign permissions to a single group of users
                 headers = {
-                        'Authorization': 'Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NjU3ODksImV4cCI6MTU3NDg2OTM4OSwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.grO2Nz9vMmp0uoDQOVieew7lEue42EXiFEzBcZRsu13ZccFE8OnUNBm0i32AmxBsHyZUPXf3hqNSQgc6sIZT0CeZEFsJMHu3P0xkn8cbc5QXjfGgCGqkEWXGI3cPPk0xoG7EXjtHSIA1XaljtkCY60DZ3ENy2uASL2aQjhI6EEh1JdRjbZ877_sgVWTZ9_XTSI7AFhpCsXzEXycMJciH0NcRqjh3A3iSGwKOs9OJanLGj31G44rAc6OEKIDlcDccUQHR-8TB8IgzWaOdy-oB8CSxXzU4VT_GF0e34AXKDJwlG4uWPe9gn6h-dG8y5TkF-g1HMep1RAj93bm64iyovg',
+                        'Authorization': 'PLACE BEAR TOKEN HERE',
                         'Content-Type': 'application/json',
                     }
 
                 params = (
-                        ('account_id', '04fdc60a7c0c404f50fd34aac79af45e'),
+                        ('account_id', 'PLACE ACCOUNT ID HERE'),
                         ) 
             
                 for single_user in single_users:
@@ -136,12 +136,12 @@ def premium(fp):
         
         if len(single_users): # now assign permissions to a single group of users
             headers = {
-                    'Authorization': 'Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NzU0NjAsImV4cCI6MTU3NDg3OTA2MCwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.JXhI23ft5Vlz_km_W02q1z8Ncs9X1uAbrwhv491ZhJ52tmwshzI3VUW29KgOuIX_t4263eSaGEkSH5n9omdAUiotLDcwPWAZ4uehA-m5ShZvxbBfyuU10yfVHpskeRviw6qpqjGEXag6pzVbb-qBCTQe89d3YFoQqbKLfjNXN55clCYKhEjZQgf4CRR6bk6SvwS_5ur0ByRYOh-m8lINolSFjmfghKITWle0ukBXidkDpHzdUXBCVh31Lh6JdLwP2ZGVUePBQ4B96DQHDhOJmY5qdxpC5NMLDo1Dcn2PrTUVBXbjOSooLe0_Dm1ikmIVecpGSEa8kE1JbdqEN0fLOQ',
+                    'Authorization': 'PLACE BEARER TOKEN HERE',
                     'Content-Type': 'application/json',
                   }
 
             params = (
-                    ('account_id', '04fdc60a7c0c404f50fd34aac79af45e'),
+                    ('account_id', 'PLACE ACCOUNT ID HERE'),
                     ) 
             
             for single_user in single_users:
