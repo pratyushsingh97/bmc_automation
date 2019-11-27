@@ -5,6 +5,7 @@ import json
 import logging
 
 from configparser import ConfigParser
+from pprint import pprint
 
 logging.basicConfig(filename='logs/logs.txt',
                             filemode='a',
@@ -59,7 +60,7 @@ class AccessGroup(object):
                 service_name = person.service_name
                 platform_viewer = person.platform_viewer
                 platform_editor = person.platform_editor
-                platform_admin = person.platform_admin
+                platform_admin = person.platform_administrator
                     
                 service_reader = person.service_reader
                 service_writer = person.service_writer
@@ -123,27 +124,77 @@ class AccessGroup(object):
                     msg = f"{member.iam_id} not added to access group, {access_group.ag_name}. Result returned error, {member.message} with code {member.code}"
             
 
-            
     @staticmethod
-    def _assign_policies(headers):
-        data = {"type": "access", "subjects": [{"attributes": [{"name": "access_group_id", "value": "AccessGroupId-e1c759ab-94d6-46e7-af84-f4d6ce6e1313"}]}], 
-                                                "roles":[{"role_id": "crn:v1:bluemix:public:iam::::role:Editor"}, {"role_id":"crn:v1:bluemix:public:iam::::serviceRole:Writer"}], 
-                                                "resources":[{"attributes": [{"name": "accountId","value": "04fdc60a7c0c404f50fd34aac79af45e"}, 
-                                                                             {"name": "serviceName", "value": "natural-language-understanding"}, 
-                                                                             {"name": "serviceInstance", "value":"f9666752-5b94-4d0d-84d2-c51cf104f027"}]}]}
-        response = requests.post('https://iam.cloud.ibm.com/v1/policies', headers=headers, data=data)
-
+    def _platform_role_crn(role):
+        mapping_role = {"_platform_viewer": "Viewer",
+                        "_platform_editor": "Editor",
+                        "_platform_administrator": "Administrator"}
+        mapped_role = mapping_role[role]
+        crn = f"crn:v1:bluemix:public:iam::::role:{mapped_role}"
+        
+        return crn
+    
+    @staticmethod
+    def _service_role_crn(role):
+        mapping_role = {"_service_reader": "Reader",
+                        "_service_writer": "Writer",
+                        "_service_manager": "Manager"}
+        mapped_role = mapping_role[role]
+        crn = f"crn:v1:bluemix:public:iam::::serviceRole:{mapped_role}" 
+        
+        return crn
+        
+    @staticmethod
+    def _assign_policies(headers, params):
+        print("Assigning Permission....")
+        logging.info("Assigning Permissions")
+        
         for access_group in AccessGroup.access_grp_list:
             # get the permissions from one person (all people in an AG have the same permissions)
             person = access_group.members[0]
-            print(person._dict_)
-            print()
+            service_name = person.service_name
+            service_instance = person.service_inst
             
-            # service_name = person.service_name
-            # service_instance = person.service_instance
-            # platform_viewer = person.platform_viewer
-            # platform_editor = person.platfor_editor
+            person_attributes = person.__dict__
             
+            # get only the permissions that have ones 
+            roles = []
+            permissions = {key:value for key, value in person_attributes.items() if value == 1}
+            platform_crns = [AccessGroup._platform_role_crn(key) for key in permissions.keys() if "platform" in key]
+            service_crns = [AccessGroup._service_role_crn(key) for key in permissions.keys() if "service" in key]
+            
+            for service_crn, platform_crn in zip(service_crns, platform_crns):
+                serv_dict = {"role_id": service_crn}
+                plat_dict = {"role_id": platform_crn}
+                
+                roles.append(serv_dict)
+                roles.append(plat_dict)
+            
+            # @TODO: Need to change the below code for non-premium instances when assigning access to just resources groups by adding if statement
+            k, acct_id = params[0]
+            account_attr = {"name": "accountId", "value": acct_id}
+            service_name_attr = {"name": "serviceName", "value": service_name}
+            service_inst_attr = {"name": "serviceInstance", "value": service_instance}
+            
+            resource_attributes = [account_attr, service_name_attr, service_inst_attr]
+            resource = [{"attributes": resource_attributes}]
+            
+            subject_attributes = [{"name": "access_group_id", "value": access_group.ag_id}]
+            subjects = [{"attributes": subject_attributes}]
+            
+            data = {"type": "access", "subjects": subjects, 
+                    "roles": roles, "resources": resource}
+            
+            data = json.dumps(data)
+            response = requests.post('https://iam.cloud.ibm.com/v1/policies', headers=headers, data=data)
+            
+            if response.status_code != 201:
+                logging.critical(f"Creating access group failed for AG {access_group.ag_name}")
+                raise Exception(response.text)
+            
+            logging.info(f"Permissions sucessfully assigned for AG {access_group.ag_name}")
+            print(f"Permissions sucessfully assigned for AG {access_group.ag_name}")
+                
 
     @staticmethod
     def create_access_groups(people_list, resource):
@@ -152,7 +203,7 @@ class AccessGroup(object):
         single_users, groups = AccessGroup._create_groupings(people_list, resource)
         iam_token, account_id = AccessGroup._credentials()
         headers = {
-                    'Authorization': 'Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NDU0MDksImV4cCI6MTU3NDg0OTAwOSwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.lYpGg_zAACUXYD85n_--uQAThEQcq7iSMJWeNq3eZyFY2yk3rrjzSUI9j67HJGNd7L9EOkNr_0WqAFak-ZJMNpbtqGqXo4LccjG2MfgCmg4CwyEQaflAxVlz7AKS0viln0BbVSkdu00w5Fbz2yGGubuyCOqI5BxA41wasMAFh-btr7Vx0p80xKWtmviqbIK0IMVVGrfDxx-u61vnznOx_wLUcMd-3IRoxLRk1CASfJfVQWa8NBsOUO2ePjpmCifQxSvpES_C_cX59LHxWNtA95_mdKijhStnKODdANwSrK0R0dD5wEVtGdYM-5RuWF4-cQQLRpudUbpz3fnXVOmG-Q',
+                    'Authorization': 'Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NjU3ODksImV4cCI6MTU3NDg2OTM4OSwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.grO2Nz9vMmp0uoDQOVieew7lEue42EXiFEzBcZRsu13ZccFE8OnUNBm0i32AmxBsHyZUPXf3hqNSQgc6sIZT0CeZEFsJMHu3P0xkn8cbc5QXjfGgCGqkEWXGI3cPPk0xoG7EXjtHSIA1XaljtkCY60DZ3ENy2uASL2aQjhI6EEh1JdRjbZ877_sgVWTZ9_XTSI7AFhpCsXzEXycMJciH0NcRqjh3A3iSGwKOs9OJanLGj31G44rAc6OEKIDlcDccUQHR-8TB8IgzWaOdy-oB8CSxXzU4VT_GF0e34AXKDJwlG4uWPe9gn6h-dG8y5TkF-g1HMep1RAj93bm64iyovg',
                     'Content-Type': 'application/json',
                   }
 
@@ -184,7 +235,9 @@ class AccessGroup(object):
         print("Adding Members to Access Group...")
         
         AccessGroup._add_members(headers)
-        AccessGroup._assign_policies(headers)
+        AccessGroup._assign_policies(headers, params)
+        
+        return single_users
     
     
     

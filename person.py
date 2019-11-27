@@ -10,7 +10,7 @@ class Person(object):
         self._service_inst = service_inst
         self._platform_viewer = platform_viewer
         self._platform_editor = platform_editor
-        self._platform_admin = platform_admin
+        self._platform_administrator = platform_admin
         self._service_reader = service_reader
         self._service_writer = service_writer
         self._service_manager = service_manager
@@ -57,12 +57,12 @@ class Person(object):
         self._platform_editor = editor
     
     @property
-    def platform_admin(self):
-        return self._platform_admin
+    def platform_administrator(self):
+        return self._platform_administrator
     
-    @platform_admin.setter
+    @platform_administrator.setter
     def platform_admin(self, admin):
-        self._platform_admin = admin
+        self._platform_administrator = admin
     
     @property
     def service_reader(self):

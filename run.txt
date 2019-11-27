@@ -1,0 +1,20 @@
+Starting the process for assigning permissions in premium offerings...
+Creating Access Group...
+Finished Creating Access Group...
+Adding Members to Access Group...
+{'iam_id': 'IBMid-3100019GJM', 'type': 'user', 'created_at': '2019-11-27T14:38:51Z', 'created_by_id': 'IBMid-550003Y0N2', 'status_code': 200}
+{'iam_id': 'IBMid-550003Y0N2', 'type': 'user', 'created_at': '2019-11-27T14:38:51Z', 'created_by_id': 'IBMid-550003Y0N2', 'status_code': 200}
+
+('{"type": "access", "subjects": [{"attributes": [{"name": "access_group_id", '
+ '"value": "AccessGroupId-7d6df6f7-388a-4015-be3d-82c96296eac4"}]}], "roles": '
+ '[{"role_id": "crn:v1:bluemix:public:iam::::serviceRole:Reader"}, {"role_id": '
+ '"crn:v1:bluemix:public:iam::::role:Viewer"}, {"role_id": '
+ '"crn:v1:bluemix:public:iam::::serviceRole:Writer"}, {"role_id": '
+ '"crn:v1:bluemix:public:iam::::role:Editor"}, {"role_id": '
+ '"crn:v1:bluemix:public:iam::::serviceRole:Manager"}, {"role_id": '
+ '"crn:v1:bluemix:public:iam::::role:Admin"}], "resources": [{"attributes": '
+ '[{"name": "accountId", "value": "04fdc60a7c0c404f50fd34aac79af45e"}, '
+ '{"name": "serviceName", "value": "natural-language-understanding"}, {"name": '
+ '"serviceInstance", "value": " f9666752-5b94-4d0d-84d2-c51cf104f027"}]}]}')
+
+{"trace":"95501c208ca443c8903d80e02f470edb","errors":[{"code":"invalid_body","message":"Invalid role(s): crn:v1:bluemix:public:iam::::role:Admin"}],"status_code":400}
