@@ -50,11 +50,11 @@ class AccessGroup(object):
         self.members = ag_members
     
     @staticmethod
-    def _create_groupings(people_list:list, resource) -> list:
+    def _create_groupings(people_list:list, option) -> list:
         # this returns the list of people who are not part of any resource group
         ag = {}
         
-        if resource == 'premium':
+        if option == 'premium':
             # only hashes on the permissions and service name
             for person in people_list:
                 service_name = person.service_name
@@ -78,10 +78,40 @@ class AccessGroup(object):
                     ag[hash_code].append(person)
                 else:
                     ag[hash_code] = [person]
-        
-        # @TODO: write this porition of the script
+                    
         else:
-            pass
+            for person in people_list:
+                platform_viewer = person.platform_viewer
+                platform_editor = person.platform_editor
+                platform_admin = person.platform_administrator
+                    
+                service_reader = person.service_reader
+                service_writer = person.service_writer
+                service_manager = person.service_manager
+                
+                resource_group_id = person.rg_id
+                resource_group_viewer = person.rg_viewer
+                resource_group_operator = person.rg_operator
+                resource_group_editor = person.rg_editor
+                resource_group_admin = person.rg_admin
+                
+                hash_code = hash((service_name,
+                                platform_viewer,
+                                platform_editor,
+                                platform_admin,
+                                service_reader,
+                                service_writer,
+                                service_manager,
+                                resource_group_id,
+                                resource_group_viewer,
+                                resource_group_operator,
+                                resource_group_editor,
+                                resource_group_admin))
+                
+                if hash_code in ag.keys():
+                    ag[hash_code].append(person)
+                else:
+                    ag[hash_code] = [person]
         
         
         access_groups = list(ag.values())
@@ -144,15 +174,16 @@ class AccessGroup(object):
         return crn
         
     @staticmethod
-    def _assign_policies(headers, params):
+    def _assign_policies(headers, params, option):
         print("Assigning Permission....")
         logging.info("Assigning Permissions")
         
         for access_group in AccessGroup.access_grp_list:
             # get the permissions from one person (all people in an AG have the same permissions)
             person = access_group.members[0]
-            service_name = person.service_name
-            service_instance = person.service_inst
+            service_name = person.service_name # none in non premium
+            service_instance = person.service_inst # none in non premium
+            resource_group_id = person.rg_id
             
             person_attributes = person.__dict__
             
@@ -169,13 +200,20 @@ class AccessGroup(object):
                 roles.append(serv_dict)
                 roles.append(plat_dict)
             
-            # @TODO: Need to change the below code for non-premium instances when assigning access to just resources groups by adding if statement
-            k, acct_id = params[0]
+            _, acct_id = params[0]
             account_attr = {"name": "accountId", "value": acct_id}
-            service_name_attr = {"name": "serviceName", "value": service_name}
-            service_inst_attr = {"name": "serviceInstance", "value": service_instance}
+            resource_attributes = None
             
-            resource_attributes = [account_attr, service_name_attr, service_inst_attr]
+            if option == 'premium':
+                service_name_attr = {"name": "serviceName", "value": service_name}
+                service_inst_attr = {"name": "serviceInstance", "value": service_instance}
+                
+                resource_attributes = [account_attr, service_name_attr, service_inst_attr]
+                
+            else:
+                rg_id_attr = {"name": "resourceGroupId", "value": resource_group_id}
+                resource_attributes = [account_attr, rg_id_attr]
+            
             resource = [{"attributes": resource_attributes}]
             
             subject_attributes = [{"name": "access_group_id", "value": access_group.ag_id}]
@@ -196,14 +234,15 @@ class AccessGroup(object):
                 
 
     @staticmethod
-    def create_access_groups(people_list, resource):
+    def create_access_groups(people_list, option):
         logging.info("Creating Access Group...")
         print("Creating Access Group...")
         
-        single_users, groups = AccessGroup._create_groupings(people_list, resource)
+        
+        single_users, groups = AccessGroup._create_groupings(people_list, option)
         iam_token, account_id = AccessGroup._credentials()
         headers = {
-                    'Authorization': 'Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NjU3ODksImV4cCI6MTU3NDg2OTM4OSwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.grO2Nz9vMmp0uoDQOVieew7lEue42EXiFEzBcZRsu13ZccFE8OnUNBm0i32AmxBsHyZUPXf3hqNSQgc6sIZT0CeZEFsJMHu3P0xkn8cbc5QXjfGgCGqkEWXGI3cPPk0xoG7EXjtHSIA1XaljtkCY60DZ3ENy2uASL2aQjhI6EEh1JdRjbZ877_sgVWTZ9_XTSI7AFhpCsXzEXycMJciH0NcRqjh3A3iSGwKOs9OJanLGj31G44rAc6OEKIDlcDccUQHR-8TB8IgzWaOdy-oB8CSxXzU4VT_GF0e34AXKDJwlG4uWPe9gn6h-dG8y5TkF-g1HMep1RAj93bm64iyovg',
+                    'Authorization': 'Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NzU0NjAsImV4cCI6MTU3NDg3OTA2MCwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.JXhI23ft5Vlz_km_W02q1z8Ncs9X1uAbrwhv491ZhJ52tmwshzI3VUW29KgOuIX_t4263eSaGEkSH5n9omdAUiotLDcwPWAZ4uehA-m5ShZvxbBfyuU10yfVHpskeRviw6qpqjGEXag6pzVbb-qBCTQe89d3YFoQqbKLfjNXN55clCYKhEjZQgf4CRR6bk6SvwS_5ur0ByRYOh-m8lINolSFjmfghKITWle0ukBXidkDpHzdUXBCVh31Lh6JdLwP2ZGVUePBQ4B96DQHDhOJmY5qdxpC5NMLDo1Dcn2PrTUVBXbjOSooLe0_Dm1ikmIVecpGSEa8kE1JbdqEN0fLOQ',
                     'Content-Type': 'application/json',
                   }
 
@@ -214,7 +253,12 @@ class AccessGroup(object):
         for group in groups:
                 identifier = random.randint(0, 999)
                 identifier = str(identifier)
-                name = f"Access Group {group[0].service_name}_{identifier}"
+                name = None
+                
+                if option == 'premium':
+                    name = f"Access Group {group[0].service_name}_{identifier}"
+                else:
+                    name = f"Access Group {group[0].rg_id}_{identifier}"
                 
                 data = {'name': name}
                 data = json.dumps(data)
@@ -237,9 +281,8 @@ class AccessGroup(object):
         print("Finished Creating Access Group...")
         print("Adding Members to Access Group...")
         
-        
         AccessGroup._add_members(headers)
-        AccessGroup._assign_policies(headers, params)
+        AccessGroup._assign_policies(headers, params, option)
         
         return single_users
     

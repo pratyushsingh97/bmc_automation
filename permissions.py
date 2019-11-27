@@ -26,9 +26,13 @@ def _service_role_crn(role):
     return crn
 
 
-def assign_permissions_premium(person, params, headers):
-    service_name = person.service_name
-    service_instance = person.service_inst
+def assign_policies(person, headers, params, option):
+    print("Assigning Permission....")
+    logging.info("Assigning Permissions")
+        
+    service_name = person.service_name # none in non premium
+    service_instance = person.service_inst # none in non premium
+    resource_group_id = person.rg_id
     
     person_attributes = person.__dict__
     
@@ -44,14 +48,21 @@ def assign_permissions_premium(person, params, headers):
         
         roles.append(serv_dict)
         roles.append(plat_dict)
-    
-    # @TODO: Need to change the below code for non-premium instances when assigning access to just resources groups by adding if statement
-    k, acct_id = params[0]
+   
+    _, acct_id = params[0]
     account_attr = {"name": "accountId", "value": acct_id}
-    service_name_attr = {"name": "serviceName", "value": service_name}
-    service_inst_attr = {"name": "serviceInstance", "value": service_instance}
+    resource_attributes = None
     
-    resource_attributes = [account_attr, service_name_attr, service_inst_attr]
+    if option == 'premium':
+        service_name_attr = {"name": "serviceName", "value": service_name}
+        service_inst_attr = {"name": "serviceInstance", "value": service_instance}
+        
+        resource_attributes = [account_attr, service_name_attr, service_inst_attr]
+        
+    else:
+        rg_id_attr = {"name": "resourceGroupId", "value": resource_group_id}
+        resource_attributes = [account_attr, rg_id_attr]
+    
     resource = [{"attributes": resource_attributes}]
     
     subject_attributes = [{"name": "iam_id", "value": person.ibm_id}]
@@ -64,12 +75,12 @@ def assign_permissions_premium(person, params, headers):
     response = requests.post('https://iam.cloud.ibm.com/v1/policies', headers=headers, data=data)
     
     if response.status_code != 201:
-        logging.critical(f"Assigning Permissions failed for {person.ibm_id}")
+        logging.critical(f"Assigining permissions failed for {person.ibm_id}")
         raise Exception(response.text)
     
     logging.info(f"Permissions sucessfully assigned for {person.ibm_id}")
     print(f"Permissions sucessfully assigned for {person.ibm_id}")
-    
+ 
     
    
 
