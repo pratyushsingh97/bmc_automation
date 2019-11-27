@@ -1,0 +1,70 @@
+curl -X POST \
+"https://iam.cloud.ibm.com/v2/groups?account_id=04fdc60a7c0c404f50fd34aac79af45e" \
+-H "Authorization: Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4NDE3MDAsImV4cCI6MTU3NDg0NTMwMCwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.Cv7iYSmaJ663GCrBqJiiw--wDarYJXwVuftidp2RZykOJw60BEKaHmG5egyr0SZnZBv7ccdzT_7iGxYuotL9ghz2SAc3T5B55peLWbXUCzIdPBF8IYmZlVACNIAxUV4GRUHH90rnRwF79UyFpVKKSRcxjOq2pox02--rTkzMEZDEufpzPcWSpxOvJTRi7ooNl0IH8KGbQBDq6s4-kKBEcKRSXAztg-XdLzHNuUaFke9hS6EqnwVKKRJMtpTkOgYOnG81t2TdNl_sLw2QLUbznbJot9XMCGdKaBY9sSA3jRLZnKejWAMHVxF2RpNT73dDf2rf96xxs9YVlJpFyIj93g" \
+-H 'Content-Type: application/json' \
+-d '{
+  "name": "Awesome Developers15454764",
+  "description": "Group for awesome developers"
+}'
+
+
+curl -X PUT \
+"https://iam.cloud.ibm.com/v2/groups/AccessGroupId-e1c759ab-94d6-46e7-af84-f4d6ce6e1313/members" \
+-H "Authorization: Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4MTA1NTUsImV4cCI6MTU3NDgxNDE1NSwiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.YMLGm-MTgeagMDUJhN74sdVi7BxrXMmIxtrSGkqTQew_mUByeLmO0Oy6mpXeLVGBI1RXsKj_Hd0KWuqV7eW7qlRBC_hY1DuDVdzIWj7CFd4dyFKlCGa-Coe6dFmcVkVEZBP5PWVr7quNttQPSRGPlwYYTeCCG0XKudOcp0fvKhlBYXZBMLy0YLsFuTXifXKvwybpTHpIkYH8Cxpztf66RMUNsa-oN370FsxH6uiJvmS_LZn0bEuOv2OmQUvgYteH3Tik035c3GFE7DMPTgP9Qck2FN6mzdcAc0l7sa8KaasKbrlp-kfJfxTcDCkSutVm52KNnOKS4vmPQi5NQu_liQ" \
+-H 'Content-Type: application/json' \
+-d '{
+  "members": [
+    {
+      "iam_id": "IBMid-3100019GJM",
+      "type": "user"
+    },
+    {
+      "iam_id": "IBMid-550003Y0N2",
+      "type": "user"
+    }
+  ]
+}'
+
+curl -X POST \
+'https://iam.cloud.ibm.com/v1/policies' \
+-H 'Authorization: Bearer eyJraWQiOiIyMDE5MDcyNCIsImFsZyI6IlJTMjU2In0.eyJpYW1faWQiOiJJQk1pZC01NTAwMDNZME4yIiwiaWQiOiJJQk1pZC01NTAwMDNZME4yIiwicmVhbG1pZCI6IklCTWlkIiwiaWRlbnRpZmllciI6IjU1MDAwM1kwTjIiLCJnaXZlbl9uYW1lIjoiUHJhdHl1c2giLCJmYW1pbHlfbmFtZSI6IlNpbmdoIiwibmFtZSI6IlByYXR5dXNoIFNpbmdoIiwiZW1haWwiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJzdWIiOiJwcmF0eXVzaHNpbmdoQGlibS5jb20iLCJhY2NvdW50Ijp7InZhbGlkIjp0cnVlLCJic3MiOiIwNGZkYzYwYTdjMGM0MDRmNTBmZDM0YWFjNzlhZjQ1ZSJ9LCJpYXQiOjE1NzQ4MTIwNDMsImV4cCI6MTU3NDgxNTY0MywiaXNzIjoiaHR0cHM6Ly9pYW0uY2xvdWQuaWJtLmNvbS9pZGVudGl0eSIsImdyYW50X3R5cGUiOiJ1cm46aWJtOnBhcmFtczpvYXV0aDpncmFudC10eXBlOnBhc3Njb2RlIiwic2NvcGUiOiJpYm0gb3BlbmlkIiwiY2xpZW50X2lkIjoiYngiLCJhY3IiOjEsImFtciI6WyJwd2QiXX0.f7jkSDiI2LHpr1FrJPDESVGfz7SGQLbLF5cEcTbPSBIWWv_-NzUlxcBjFrHgxnqesifbNmUbQ0Eemmm24RA2yRa4IgfVPzj9t8k9yQLWOG-byW5nB-GyaK-t5GFNueBKMx7HWnNS8znLkMYkZm54nWfZlAd_P-K3_R-zNB9a5dUvMJRm7nbI6io8XuT7jBhxW9MJJwdRa_KkdWsfvm6zVfeQWKamLiCCVlxWefKqP5F8WE2EU8YHuIM53LR2foCMbCK9WVCOpA1ZyOIrEEhupYXgNboG45AcInN8RslEzfQjKP8lOdz01rUfi62P4L05scRTmi2DamxeeZkDMJZnbg' \
+-H 'Content-Type: application/json' \
+-d '{
+  "type": "access",
+  "subjects": [
+    {
+      "attributes": [
+        {
+          "name": "access_group_id",
+          "value": "AccessGroupId-e1c759ab-94d6-46e7-af84-f4d6ce6e1313"
+        }
+      ]
+    }
+  ],
+  "roles":[
+    {
+      "role_id": "crn:v1:bluemix:public:iam::::role:Editor"
+    },
+    {
+    "role_id":"crn:v1:bluemix:public:iam::::serviceRole:Writer"
+    }
+  ],
+  "resources":[
+    {
+      "attributes": [
+        {
+          "name": "accountId",
+          "value": "04fdc60a7c0c404f50fd34aac79af45e"
+        },
+        {
+          "name": "serviceName",
+          "value": "natural-language-understanding"
+        },
+        {
+          "name": "serviceInstance",
+          "value":"f9666752-5b94-4d0d-84d2-c51cf104f027"
+        }
+      ]
+    }
+  ]
+}'
