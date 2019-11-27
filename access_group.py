@@ -119,10 +119,9 @@ class AccessGroup(object):
             members = response_json['members']
             
             for member in members:
-                print(member)
                 if member['status_code'] != 200:
                     msg = f"{member.iam_id} not added to access group, {access_group.ag_name}. Result returned error, {member.message} with code {member.code}"
-            
+                    logging.critical(msg) 
 
     @staticmethod
     def _platform_role_crn(role):
@@ -198,6 +197,7 @@ class AccessGroup(object):
 
     @staticmethod
     def create_access_groups(people_list, resource):
+        logging.info("Creating Access Group...")
         print("Creating Access Group...")
         
         single_users, groups = AccessGroup._create_groupings(people_list, resource)
@@ -227,12 +227,16 @@ class AccessGroup(object):
                 response_json = response.json()
                 access_group = AccessGroup(name, response_json['id'], group)
                 AccessGroup.access_grp_list.append(access_group)
+                
+                logging.info(f'Created access group with the name, {name}')
 
                 for person in group:
                     person.ag = access_group
         
+        logging.info('Finished Creating Access Group')
         print("Finished Creating Access Group...")
         print("Adding Members to Access Group...")
+        
         
         AccessGroup._add_members(headers)
         AccessGroup._assign_policies(headers, params)
