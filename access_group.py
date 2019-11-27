@@ -133,6 +133,18 @@ class AccessGroup(object):
                                                                              {"name": "serviceInstance", "value":"f9666752-5b94-4d0d-84d2-c51cf104f027"}]}]}
         response = requests.post('https://iam.cloud.ibm.com/v1/policies', headers=headers, data=data)
 
+        for access_group in AccessGroup.access_grp_list:
+            # get the permissions from one person (all people in an AG have the same permissions)
+            person = access_group.members[0]
+            print(person._dict_)
+            print()
+            
+            # service_name = person.service_name
+            # service_instance = person.service_instance
+            # platform_viewer = person.platform_viewer
+            # platform_editor = person.platfor_editor
+            
+
     @staticmethod
     def create_access_groups(people_list, resource):
         print("Creating Access Group...")
@@ -172,6 +184,7 @@ class AccessGroup(object):
         print("Adding Members to Access Group...")
         
         AccessGroup._add_members(headers)
+        AccessGroup._assign_policies(headers)
     
     
     
