@@ -42,5 +42,5 @@ For some reason, the *IBM IAM Policy Manager API*, the backbone of this program,
     2. Place the tokens starting at **line 245** in *access_group.py*
 7. Follow the same steps as above for *non-premium* instances except the *non-premium.csv* requires the resource group id.
 8. The program can be run with the following commands:
-    1. `python [main.py](http://main.py) --premium premium.csv` for premium instances
-    2. `python [main.py](http://main.py) --non_premium non_premium.csv` for non-premium instances
+    1. `python main.py --premium premium.csv` for premium instances
+    2. `python main.py --non_premium non_premium.csv` for non-premium instances
