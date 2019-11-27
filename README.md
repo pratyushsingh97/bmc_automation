@@ -37,7 +37,7 @@ For some reason, the *IBM IAM Policy Manager API*, the backbone of this program,
     3. The service instance is an alphanumeric string that identifies the instance
     4. After these fields are defined, the remaining columns (i.e. *platform_viewer)* define the level of access to provide. Place a "1" if you would like to grant this particular user that level of access. You can leave the column blank or assign a "0" if you **do not** wish to assign any access. 
         1. **Note, not all resources offer service-level access. If you provide service-level access for a resource that does not have it, the API will return an error.**
-6.  ****Now it is time to place the raw tokens, the *IAM-Token* and the *account id* into our code. As a reminder, the issue is being investigated and will be fixed as soon as possible.
+6.  Now it is time to place the raw tokens, the *IAM-Token* and the *account id* into our code. As a reminder, the issue is being investigated and will be fixed as soon as possible.
     1. Place the tokens starting at **line 86** and **line 138** in *main.py.* I have placed a placeholder where the text should be copy & pasted. 
     2. Place the tokens starting at **line 245** in *access_group.py*
 7. Follow the same steps as above for *non-premium* instances except the *non-premium.csv* requires the resource group id.
