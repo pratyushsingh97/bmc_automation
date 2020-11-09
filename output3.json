@@ -1,0 +1,41 @@
+Starting the process for assigning permissions in premium offerings...
+Creating Access Group...
+Finished Creating Access Group...
+Adding Members to Access Group...
+Assigning Permission....
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::role:Viewer', 'display_name': 'Viewer', 'description': "As a viewer, you can view service instances, but you can't modify them."}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::role:Viewer', 'display_name': 'Viewer', 'description': "As a viewer, you can view service instances, but you can't modify them."}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Reader', 'display_name': 'Reader', 'description': 'As a reader, you can perform read-only actions within a service such as viewing service-specific resources.'}, {'role_id': 'crn:v1:bluemix:public:iam::::role:Viewer', 'display_name': 'Viewer', 'description': "As a viewer, you can view service instances, but you can't modify them."}, {'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Writer', 'display_name': 'Writer', 'description': 'As a writer, you have permissions beyond the reader role, including creating and editing service-specific resources.'}, {'role_id': 'crn:v1:bluemix:public:iam::::role:Editor', 'display_name': 'Editor', 'description': 'As an editor, you can perform all platform actions except for managing the account and assigning access policies.'}, {'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}, {'role_id': 'crn:v1:bluemix:public:iam::::role:Administrator', 'display_name': 'Administrator', 'description': 'As an administrator, you can perform all platform actions based on the resource this role is being assigned, including assigning access policies to other users.'}]
+
+
+{'name': 'serviceName', 'value': 'conversation', 'operator': 'stringEquals'}
+[{'role_id': 'crn:v1:bluemix:public:iam::::serviceRole:Manager', 'display_name': 'Manager', 'description': 'As a manager, you have permissions beyond the writer role to complete privileged actions as defined by the service. In addition, you can create and edit service-specific resources.'}]
+
+

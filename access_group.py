@@ -16,9 +16,13 @@ logging.basicConfig(filename='logs/logs.txt',
 logging.critical("Running Access Groups")
 logger = logging.getLogger('ag')
 
+
 class AccessGroup(object):
     access_grp_list = []
     
+    ACCESS_TOKEN = None
+    ACCOUNT_ID = None
+
     def __init__(self, ag_name=None, ag_id=None, members=None):
         self._ag_name = ag_name
         self._ag_id = ag_id
@@ -122,11 +126,13 @@ class AccessGroup(object):
         
     
     @staticmethod
-    def _credentials():
+    def _credentials() -> None:
         config = ConfigParser()
-        config.read('config.ini')
-        
-        return config['Keys']['iam_token'], config['Keys']['account_id']
+        config.read('config/keys.ini')
+
+        AccessGroup.ACCOUNT_ID = config['ACCOUNT_ID']['account_id']
+        AccessGroup.ACCESS_TOKEN = config['ACCESS_TOKEN']['access_token']
+
     
     @staticmethod
     def _add_members(headers):
@@ -240,14 +246,14 @@ class AccessGroup(object):
         
         
         single_users, groups = AccessGroup._create_groupings(people_list, option)
-        iam_token, account_id = AccessGroup._credentials()
+        AccessGroup._credentials()
         headers = {
-                    'Authorization': 'PLACE BEARER TOKEN HERE',
+                    'Authorization': AccessGroup.ACCESS_TOKEN,
                     'Content-Type': 'application/json',
                   }
 
         params = (
-                  ('account_id', 'PLACE ACCOUNT ID HERE'),
+                  ('account_id', AccessGroup.ACCOUNT_ID),
                 )       
         
         for group in groups:

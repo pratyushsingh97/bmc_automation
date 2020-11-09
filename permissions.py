@@ -7,6 +7,10 @@ from person import Person
 
 logging.getLogger('ag')
 
+def _read_all_permissions(params, headers): # read the permissions from all of the Watson Assistant permissions
+    response = requests.get('https://iam.cloud.ibm.com/v1/policies', headers=headers, params=params)
+
+
 def _platform_role_crn(role):
     mapping_role = {"_platform_viewer": "Viewer",
                     "_platform_editor": "Editor",
@@ -32,6 +36,9 @@ def assign_policies(person, headers, params, option):
         
     service_name = person.service_name # none in non premium
     service_instance = person.service_inst # none in non premium
+    region = person.region
+    resource_type = person.resource_type # "assistant" for assistant id or "skill" for skill id
+    resource = person.resource # @TODO: figure this part completely out or add some filter for only assistants 
     resource_group_id = person.rg_id
     
     person_attributes = person.__dict__
@@ -56,9 +63,13 @@ def assign_policies(person, headers, params, option):
     if option == 'premium':
         service_name_attr = {"name": "serviceName", "value": service_name}
         service_inst_attr = {"name": "serviceInstance", "value": service_instance}
+        service_region_attr = {"name": "region", "value": region}
+        resource_type_attr = {"name": "resourceType", "value": "assistant"}
+        resource_attr = {"name": "resource", "value": resource}
         
-        resource_attributes = [account_attr, service_name_attr, service_inst_attr]
-        
+        resource_attributes = [account_attr, service_name_attr, service_inst_attr, 
+                               service_region_attr, resource_type_attr, resource_attr]
+        print(resource_attributes) 
     else:
         rg_id_attr = {"name": "resourceGroupId", "value": resource_group_id}
         resource_attributes = [account_attr, rg_id_attr]
