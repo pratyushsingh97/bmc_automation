@@ -2,6 +2,7 @@
 import json
 import logging
 import requests
+import math
 
 from person import Person
 
@@ -48,13 +49,16 @@ def assign_policies(person, headers, params, option):
     permissions = {key:value for key, value in person_attributes.items() if value == 1}
     platform_crns = [_platform_role_crn(key) for key in permissions.keys() if "platform" in key]
     service_crns = [_service_role_crn(key) for key in permissions.keys() if "service" in key]
+
+    if len(service_crns):
+        for service_crn in service_crns:
+             serv_dict = {"role_id": service_crn}
+             roles.append(serv_dict)
     
-    for service_crn, platform_crn in zip(service_crns, platform_crns):
-        serv_dict = {"role_id": service_crn}
-        plat_dict = {"role_id": platform_crn}
-        
-        roles.append(serv_dict)
-        roles.append(plat_dict)
+    if len(platform_crns):
+       for platform_crn in platform_crns:
+             plat_dict = {"role_id": platform_crn}
+             roles.append(plat_dict)
    
     _, acct_id = params[0]
     account_attr = {"name": "accountId", "value": acct_id}
@@ -64,12 +68,14 @@ def assign_policies(person, headers, params, option):
         service_name_attr = {"name": "serviceName", "value": service_name}
         service_inst_attr = {"name": "serviceInstance", "value": service_instance}
         service_region_attr = {"name": "region", "value": region}
-        resource_type_attr = {"name": "resourceType", "value": "assistant"}
+        resource_type_attr = {"name": "resourceType", "value": resource_type}
         resource_attr = {"name": "resource", "value": resource}
         
         resource_attributes = [account_attr, service_name_attr, service_inst_attr, 
                                service_region_attr, resource_type_attr, resource_attr]
-        print(resource_attributes) 
+        
+        resource_attributes = [element for element in resource_attributes if type(element['value']) != float]
+        
     else:
         rg_id_attr = {"name": "resourceGroupId", "value": resource_group_id}
         resource_attributes = [account_attr, rg_id_attr]
@@ -81,7 +87,7 @@ def assign_policies(person, headers, params, option):
     
     data = {"type": "access", "subjects": subjects, 
             "roles": roles, "resources": resource}
-    
+
     data = json.dumps(data)
     response = requests.post('https://iam.cloud.ibm.com/v1/policies', headers=headers, data=data)
     

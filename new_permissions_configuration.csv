@@ -1,0 +1,11 @@
+,ibm_id,service_name,service_instance,platform_viewer,platform_operator,platform_editor,platform_admin,service_reader,service_writer,service_manager,resourceType,region,resource,resource_type
+0,iam-ServiceId-c826e01a-fb17-43a3-bfc7-61ef34027582,conversation,,0,0,0,0,0,0,1,,,,
+1,IBMid-270006DJ74,conversation,,1,0,0,0,0,0,0,,,,
+2,IBMid-550003Y0N2,conversation,,1,0,0,0,0,0,0,,,,
+3,IBMid-270006DJ74,conversation,,0,0,0,0,0,0,1,skill,,,
+4,IBMid-270006DJ74,conversation,,1,0,0,0,0,0,0,assistant,,,
+5,iam-ServiceId-99037bba-8b35-4e06-b6a8-46354d0fe343,conversation,,0,0,0,0,0,0,1,,,,
+6,iam-ServiceId-5b829942-8e5f-4257-9046-9eaed527ce6b,conversation,,0,0,0,0,0,0,1,,,,
+7,iam-ServiceId-e1f29f42-6d2e-4257-a547-e3dbb5211014,conversation,,0,0,0,0,0,0,1,,,,
+8,IBMid-550003Y0N2,conversation,,1,0,1,1,1,1,1,assistant,,,
+9,iam-ServiceId-0a69caf5-8c8e-4209-843c-28c14379cd07,conversation,,0,0,0,0,0,0,1,,,,
