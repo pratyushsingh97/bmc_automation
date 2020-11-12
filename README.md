@@ -7,7 +7,6 @@ The Watson Assistant Migration Tool takes the permissions assigned to various in
 
 The Migration tool is best run by the account owner, or by someone who has equivalent permissions such as administrator on the account. Additionally, to run this tool `python 3.7` is required along with `pip3` installed on the machine. The libraries required are found in `requirements.txt`, and more detail on the assets needed to run the tool are found in the *Prerequisite* section.  The Migration tool requires minor configuration before use which is detailed in the *Configuration* section.
 
---
 ## Prerequisites 
 1. [Install the `ibmcloud cli` ](https://cloud.ibm.com/docs/cli)
 2. `python 3.*`, preferably `python 3.7`
