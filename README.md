@@ -1,5 +1,6 @@
 # Watson Assistant Migration Tool
-by: [Pratyush Singh](pratyushsingh@ibm.com) <br>
+![Rocket](https://media.giphy.com/media/dJezVlwfVulTykjRQj/giphy.gif) <br>
+by: [Pratyush Singh](pratyushsingh@ibm.com) <br> 
 date: 11/11/2020
 
 ## Background 
