@@ -1,2 +1,7 @@
 .vscode/
 __pycache__/
+debugging_files
+meeting/
+logs/logs.txt
+config/keys.ini
+config/permissions.ini
