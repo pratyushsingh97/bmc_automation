@@ -5,3 +5,4 @@ meeting/
 logs/logs.txt
 config/keys.ini
 config/permissions.ini
+.DS_Store
