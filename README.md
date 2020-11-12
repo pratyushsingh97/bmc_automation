@@ -1,46 +1,35 @@
-# ReadMe for BMC Automation Script
+# Watson Assistant Migration Tool
+by: [Pratyush Singh](pratyushsingh@ibm.com)
+date: 11/11/2020
 
+## Background 
+The Watson Assistant Migration Tool takes the permissions assigned to various instances of **Watson Assistant**, and assigns them to a single instance of Watson Assistant specified under the `config/permissions.ini` file. **Note, this tool does not delete the old permissions.** 
 
-## Background
+The Migration tool is best run by the account owner, or by someone who has equivalent permissions such as administrator on the account. Additionally, to run this tool `python 3.7` is required along with `pip3` installed on the machine. The libraries required are found in `requirements.txt`, and more detail on the assets needed to run the tool are found in the *Prerequisite* section.  The Migration tool requires minor configuration before use which is detailed in the *Configuration* section.
 
-The *Automatic IAM Manager* assigns permissions to resources and resource groups. Given a CSV, the templates are attached, the program will iterate through each candidate, form access groups if several users have the same permissions, and assign the appropriate permissions to that access group. 
+--
+## Prerequisites 
+1. [Install the `ibmcloud cli` ](https://cloud.ibm.com/docs/cli)
+2. `python 3.*`, preferably `python 3.7`
+3. `pip3`
+4. *Administrator* IAM Services privileges on the account
 
-If a user shares **no** shared policies then the program will just assign the permissions to that user. The script has logging and catches exceptions if any step of the program fails (creating an access group, assigning permissions, etc.). The logs are there to help debug at which point did the service fail.
+## Configuration
+### IAM API Key 
+1. Navigate to [IBM Cloud](cloud.ibm.com)
+2. Click on "Manage"  > "Access (IAM)" 
+3. Scroll down to "My IBM Cloud API Keys" > click on "View all" > "Create API Key"
+4. Copy the newly created "API Key" and paste it into `api_key` field in the `config/keys.ini`
+5.  The `account_id` is listed in "My user details" box under the "Access (IAM)". Copy and paste the account id in the `account_id` field in `config/keys.ini`
+6.  **Leave `access_token` blank. The tool will fill that in.**
 
-There are two types of CSV - *premium.csv* and *non_premium.csv.* The *premium.csv* is for assigning access to server instances. The *non_premium.csv* is for assigning permissions to resource groups.
+### permissions.ini
+ **Note: the specifications listed in `permissions.ini` are applied to all users.**
+The `permissions.ini` file contains the specifications for the Watson Assistant instance that the permissions are being transferred to.
+1. The `service_instance` is the name of the Watson Assistant instance. This is equivalent to the name of Watson Assistant under the "Resource List" in [cloud.ibm.com](cloud.ibm.com).
+2. *(Optional)* You can specify "assistant" or "skill" under `resourceType` if you would like to narrow the permissions down to the Assistant or Skill level.
+3. *(Optional)* If `resourceType` is "skill", then `resource` is the skill id. If `resourceType` is "assistant", then `resource` is the assistant id.
 
-## Requirements:
-
-- python 3.x
-- ibmcloud cli
-
-## Issue Being Investigated
-
-For some reason, the *IBM IAM Policy Manager API*, the backbone of this program, only seems to accept raw string auth tokens. If a variable is passed, then the call seems to fail. The issue is currently being investigated, and the ReadMe will be updated once a fix is found. In the meantime, in the section **How to Use** I have shown the places that a raw string auth-tokens needs to be placed. 
-
-## Installation
-
-- Python 3 install guide can be found [here](https://www.python.org/downloads/). For the development of this project was python 3.6.8
-- The guide to install the IBM Cloud CLI can be found [here](https://cloud.ibm.com/docs/cli?topic=cloud-cli-getting-started)
-
-## Usage
-
-1. Login into your IBM Cloud account via the terminal: `ibmcloud login --sso`
-2. Follow the steps on the screen and choose the account that will be assigning the permissions to resources inside of it.
-3. Note down the account id. The account id is an alphanumeric string that is in parentheses following the account name. Kind of like `Bob Marley (ae345345)`. The account number is one of the raw string that will be required.
-4. Next, we will obtain the *IAM Token.* In the terminal, type the following command: `ibmcloud iam ouath-tokens`. Copy & paste the token (only the string starting at *Bearer:xxxx* onwards is required). This is the other token that will be used as raw input. 
-5. For premium instances, open up *premium.csv.* 
-    1. Enter the *ibm_id.* It can be found by the following navigation path on [cloud.ibm.com](http://cloud.ibm.com):
-        1. Manage → Access (IAM) → Users → *Select the Use*r → *User Details → IAM ID*
-    2. The service name is for example "watson-assistant" or "natural-language-understanding"
-        1. I have found that putting the service name in lowercase with dashes works better
-    3. The service instance is an alphanumeric string that identifies the instance
-    4. After these fields are defined, the remaining columns (i.e. *platform_viewer)* define the level of access to provide. Place a "1" if you would like to grant this particular user that level of access. You can leave the column blank or assign a "0" if you **do not** wish to assign any access. 
-        1. **Note, not all resources offer service-level access. If you provide service-level access for a resource that does not have it, the API will return an error.**
-6.  Now it is time to place the raw tokens, the *IAM-Token* and the *account id* into our code. As a reminder, the issue is being investigated and will be fixed as soon as possible.
-    1. Place the tokens starting at **line 86** and **line 138** in *main.py.* I have placed a placeholder where the text should be copy & pasted. 
-    2. Place the tokens starting at **line 245** in *access_group.py*
-7. Follow the same steps as above for *non-premium* instances except the *non-premium.csv* requires the resource group id.
-8. The program can be run with the following commands:
-    1. `python main.py --premium premium.csv` for premium instances
-    2. `python main.py --non_premium non_premium.csv` for non-premium instances
+## Run the Migration Script 
+`python main.py --permissions`
+1. The script will output  "existing_permissions_output.csv" that lists the existing permissions for Watson Assistant. Additionally, the script will output "new_permissions_configuration.csv" that lists the new permissions based on the specifications in `config/permissions.ini`.
